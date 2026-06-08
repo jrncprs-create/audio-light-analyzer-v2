@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Audio Light Analyzer v2</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Audio Light Analyzer v2</h1>
+    <p class="warn">Chrome may throttle analysis when the tab is hidden.</p>
+  </header>
+
+  <main>
+    <section id="input-section" class="card">
+      <h2>Audio input</h2>
+      <div class="row">
+        <select id="device-select"></select>
+        <button id="btn-start">Start</button>
+        <button id="btn-stop" disabled>Stop</button>
+      </div>
+      <div class="meta">Selected: <span id="sel-label">—</span> · Sample rate: <span id="sample-rate">—</span></div>
+    </section>
+
+    <section id="live-signal" class="card">
+      <h2>Live signal</h2>
+      <div>RMS: <span id="rms">—</span> · Peak: <span id="peak">—</span> · State: <span id="signal-state">no signal</span></div>
+      <canvas id="wave-canvas" class="big-canvas"></canvas>
+    </section>
+
+    <section id="manual-bpm" class="card">
+      <h2>Manual BPM / Grid</h2>
+      <div class="row">
+        <input id="bpm-input" type="number" placeholder="BPM" min="20" max="300">
+        <button id="apply-bpm">Apply BPM</button>
+        <button id="reset-bpm">Reset BPM</button>
+      </div>
+      <div>BPM: <span id="bpm-display">—</span> · Counter: <span id="bpm-counter">—</span></div>
+    </section>
+
+    <section id="waveform-history" class="card">
+      <h2>Waveform history</h2>
+      <canvas id="history-canvas" class="small-canvas"></canvas>
+    </section>
+
+    <section id="spectrum" class="card">
+      <h2>Spectrum</h2>
+      <canvas id="spectrum-canvas" class="big-canvas"></canvas>
+    </section>
+
+    <section id="energy-timeline" class="card">
+      <h2>Energy timeline</h2>
+      <div class="row energy-rows">
+        <div>Low: <canvas id="energy-low" class="tiny-canvas"></canvas></div>
+        <div>Mid: <canvas id="energy-mid" class="tiny-canvas"></canvas></div>
+        <div>High: <canvas id="energy-high" class="tiny-canvas"></canvas></div>
+      </div>
+    </section>
+
+    <section id="freq-rhythm" class="card">
+      <h2>Frequency Rhythm Viewer</h2>
+      <div id="freq-grid"></div>
+    </section>
+
+    <section id="debug" class="card">
+      <h2>Debug</h2>
+      <div>Inputs found: <pre id="dbg-inputs">-</pre></div>
+      <div>Device label: <span id="dbg-device">-</span></div>
+      <div>Last error: <span id="dbg-error">-</span></div>
+      <div>Tab state: <span id="dbg-tab">-</span></div>
+      <div>Last update age: <span id="dbg-age">-</span></div>
+    </section>
+
+    <section class="card">
+      <button id="btn-reset-analysis">Reset Analysis</button>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
