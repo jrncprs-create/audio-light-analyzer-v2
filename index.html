@@ -7,75 +7,88 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header>
+  <header class="rack-header">
     <h1>Audio Light Analyzer v2</h1>
     <p class="warn">Chrome may throttle analysis when the tab is hidden.</p>
   </header>
 
-  <main>
-    <section id="input-section" class="card">
-      <h2>Audio input</h2>
-      <div class="row">
+  <main class="analyzer-rack">
+    <section class="control-bar panel" aria-label="Controls">
+      <div id="input-section" class="control-group">
+        <span class="control-label">Input</span>
         <select id="device-select"></select>
         <button id="btn-start">Start</button>
         <button id="btn-stop" disabled>Stop</button>
+        <span class="control-meta">Sel: <span id="sel-label">—</span> · SR: <span id="sample-rate">—</span></span>
       </div>
-      <div class="meta">Selected: <span id="sel-label">—</span> · Sample rate: <span id="sample-rate">—</span></div>
-    </section>
 
-    <section id="live-signal" class="card">
-      <h2>Live signal</h2>
-      <div>RMS: <span id="rms">—</span> · Peak: <span id="peak">—</span> · State: <span id="signal-state">no signal</span></div>
-      <canvas id="wave-canvas" class="big-canvas"></canvas>
-    </section>
+      <div class="control-sep" aria-hidden="true"></div>
 
-    <section id="manual-bpm" class="card">
-      <h2>Manual BPM / Grid</h2>
-      <div class="row">
+      <div id="manual-bpm" class="control-group">
+        <span class="control-label">BPM</span>
         <input id="bpm-input" type="number" placeholder="BPM" min="20" max="300">
-        <button id="apply-bpm">Apply BPM</button>
-        <button id="reset-bpm">Reset BPM</button>
+        <button id="apply-bpm">Apply</button>
+        <button id="reset-bpm">Reset</button>
+        <span class="control-meta">BPM: <span id="bpm-display">—</span> · Cnt: <span id="bpm-counter">—</span></span>
       </div>
-      <div>BPM: <span id="bpm-display">—</span> · Counter: <span id="bpm-counter">—</span></div>
-    </section>
 
-    <section id="waveform-history" class="card">
-      <h2>Waveform history</h2>
-      <canvas id="history-canvas" class="small-canvas"></canvas>
-    </section>
+      <div class="control-sep" aria-hidden="true"></div>
 
-    <section id="spectrum" class="card">
-      <h2>Spectrum</h2>
-      <canvas id="spectrum-canvas" class="big-canvas"></canvas>
-    </section>
-
-    <section id="energy-timeline" class="card">
-      <h2>Energy timeline</h2>
-      <div class="row energy-rows">
-        <div>Low: <canvas id="energy-low" class="tiny-canvas"></canvas></div>
-        <div>Mid: <canvas id="energy-mid" class="tiny-canvas"></canvas></div>
-        <div>High: <canvas id="energy-high" class="tiny-canvas"></canvas></div>
+      <div class="control-group control-signal">
+        <span class="control-label">Signal</span>
+        <span id="signal-state" class="signal-badge">no signal</span>
+        <span class="control-stat">RMS <strong id="rms">—</strong></span>
+        <span class="control-stat">Peak <strong id="peak">—</strong></span>
       </div>
     </section>
 
-    <section id="freq-rhythm" class="card">
+    <div class="scope-row">
+      <div class="scope-row-main">
+        <section id="live-signal" class="scope-panel panel">
+          <h2>Live Waveform</h2>
+          <canvas id="wave-canvas" class="big-canvas scope-canvas" width="1024" height="108"></canvas>
+        </section>
+
+        <section id="spectrum" class="scope-panel panel">
+          <h2>Spectrum</h2>
+          <canvas id="spectrum-canvas" class="big-canvas scope-canvas" width="1024" height="220"></canvas>
+        </section>
+      </div>
+
+      <aside class="scope-row-side">
+        <section id="waveform-history" class="scope-panel panel scope-panel-history">
+          <h2>Waveform History</h2>
+          <canvas id="history-canvas" class="small-canvas scope-canvas" width="400" height="320"></canvas>
+        </section>
+
+        <section id="debug" class="scope-panel panel panel-debug">
+          <h2>Debug</h2>
+          <div class="debug-line">Inputs: <pre id="dbg-inputs">-</pre></div>
+          <div class="debug-line">Device: <span id="dbg-device">-</span></div>
+          <div class="debug-line">Error: <span id="dbg-error">-</span></div>
+          <div class="debug-line">Tab: <span id="dbg-tab">-</span></div>
+          <div class="debug-line">Age: <span id="dbg-age">-</span></div>
+        </section>
+
+        <section class="panel panel-actions">
+          <button id="btn-reset-analysis" class="btn-block">Reset Analysis</button>
+        </section>
+      </aside>
+    </div>
+
+    <section id="energy-timeline" class="timeline-panel panel">
+      <h2>Energy Timeline</h2>
+      <div class="energy-rows">
+        <div class="energy-band"><span class="energy-label">Low</span><canvas id="energy-low" class="tiny-canvas scope-canvas" width="480" height="68"></canvas></div>
+        <div class="energy-band"><span class="energy-label">Mid</span><canvas id="energy-mid" class="tiny-canvas scope-canvas" width="480" height="68"></canvas></div>
+        <div class="energy-band"><span class="energy-label">High</span><canvas id="energy-high" class="tiny-canvas scope-canvas" width="480" height="68"></canvas></div>
+      </div>
+    </section>
+
+    <section id="freq-rhythm" class="freq-panel panel">
       <h2>Frequency Rhythm Viewer</h2>
       <div id="freq-grid"></div>
     </section>
-
-    <section id="debug" class="card">
-      <h2>Debug</h2>
-      <div>Inputs found: <pre id="dbg-inputs">-</pre></div>
-      <div>Device label: <span id="dbg-device">-</span></div>
-      <div>Last error: <span id="dbg-error">-</span></div>
-      <div>Tab state: <span id="dbg-tab">-</span></div>
-      <div>Last update age: <span id="dbg-age">-</span></div>
-    </section>
-
-    <section class="card">
-      <button id="btn-reset-analysis">Reset Analysis</button>
-    </section>
-
   </main>
 
   <script src="app.js"></script>
